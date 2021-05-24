@@ -33,12 +33,6 @@ train_model:
     features_to_use: [ZN, INDUS, CHAS, NOX, RM, AGE, DIS, RAD, TAX, PTRATIO]
   get_target:
     target: CRIM
-  split_data:
-    train_size: 0.5
-    test_size: 0.25
-    validate_size: 0.25
-    random_state: 24
-    save_split_prefix: test/test/example-boston
   params:
     max_depth: 100
     learning_rate: 50
