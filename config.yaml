@@ -1,0 +1,62 @@
+model:
+  name: clouds
+  author: Qiana Yang
+  version: AA1
+  description: ## ADD
+  tags:
+    - classifier
+    - housing
+  dependencies: requirements.txt
+save_data:
+  html: https://archive.ics.uci.edu/ml/machine-learning-databases/undocumented/taylor/cloud.data
+  local_path: data/raw_cloud.data
+  attempt: 4
+  wait: 3
+load_data:
+  input_path: data/raw_cloud.data
+  output_path: data/cloud.csv
+  columns:
+    ['visible_mean', 'visible_max', 'visible_min',
+    'visible_mean_distribution', 'visible_contrast',
+    'visible_entropy', 'visible_second_angular_momentum',
+    'IR_mean', 'IR_max', 'IR_min']
+generate_features:
+  make_categorical:
+    columns: RAD
+    RAD:
+      categories: [1, 2, 3, 5, 4, 8, 6, 7, 24]
+      one_hot_encode: True
+  bin_values:
+    columns: CRIM
+    quartiles: 2
+  save_dataset: test/test/boston_house_prices_processed.csv
+train_model:
+  method: xgboost
+  choose_features:
+    features_to_use: [ZN, INDUS, CHAS, NOX, RM, AGE, DIS, RAD, TAX, PTRATIO]
+  get_target:
+    target: CRIM
+  split_data:
+    train_size: 0.5
+    test_size: 0.25
+    validate_size: 0.25
+    random_state: 24
+    save_split_prefix: test/test/example-boston
+  params:
+    max_depth: 100
+    learning_rate: 50
+    random_state: 1019
+  fit:
+    eval_metric: auc
+    verbose: True
+  save_tmo: models/example-boston-crime-prediction.pkl
+evaluate_model:
+  metrics: [auc, accuracy, logloss]
+pyfileA:
+    functionA:
+        variableAA: value
+        variableAB: value
+    functionB:
+        variableBA: value
+        variableBB: value
+    save_results: path/to/saveoutput.csv
