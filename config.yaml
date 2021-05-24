@@ -14,22 +14,19 @@ save_data:
   wait: 3
 load_data:
   input_path: data/raw_cloud.data
-  output_path: data/cloud.csv
+  output_path: tests/data/cloud.csv
   columns:
     ['visible_mean', 'visible_max', 'visible_min',
     'visible_mean_distribution', 'visible_contrast',
     'visible_entropy', 'visible_second_angular_momentum',
     'IR_mean', 'IR_max', 'IR_min']
 generate_features:
-  make_categorical:
-    columns: RAD
-    RAD:
-      categories: [1, 2, 3, 5, 4, 8, 6, 7, 24]
-      one_hot_encode: True
-  bin_values:
-    columns: CRIM
-    quartiles: 2
-  save_dataset: test/test/boston_house_prices_processed.csv
+  train_feature_path: tests/data/train_features.csv
+  train_target_path: tests/data/train_labels.csv
+  test_feature_path: tests/data/test_features.csv
+  test_target_path: tests/data/test_labels.csv
+  random_state: 42
+  test_size: 0.4
 train_model:
   method: xgboost
   choose_features:
