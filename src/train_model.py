@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split as tts
 from sklearn.ensemble import RandomForestClassifier
 
 import logging
@@ -27,8 +27,7 @@ def train_test_split(features: pd.DataFrame, target: pd.DataFrame, train_feature
         :obj: tuple - tuple of pandas dataframes consisting of features and labels divided into train
                       and test sets
     """
-    X_train, X_test, y_train, y_test = train_test_split(features, target, random_state=seed,
-                                                        test_size=test_size)
+    X_train, X_test, y_train, y_test = tts(features, target, random_state=seed, test_size=test_size)
 
     X_train.to_csv(train_feature_path, index=False)
     X_test.to_csv(train_target_path, index=False)
@@ -56,10 +55,11 @@ def fit_model(X_train: pd.DataFrame, labels: pd.DataFrame, X_test: pd.DataFrame,
     rf = RandomForestClassifier(**kwargs)
     rf.fit(X_train[features_list], labels)
 
-    df = pd.DataFrame(np.zeros(len(X_test)))
-    df['ypred_proba'] = rf.predict_proba(X_test)
-    df['ypred_bin'] = rf.predict(X_test)
+    ypred_proba = rf.predict_proba(X_test[features_list])[:, 1]
+    ypred_bin = rf.predict(X_test[features_list])
 
+    df = pd.DataFrame(ypred_proba, columns=['ypred_proba'])
+    df['ypred_bin'] = ypred_bin
     df.to_csv(output_path, index=False)
     logger2.info(f'Predictions on test set saved to {output_path}.')
 

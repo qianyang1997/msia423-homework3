@@ -3,3 +3,6 @@
 
 .ipynb_checkpoints/*
 .idea/*
+
+tests/data/*
+tests/result/*

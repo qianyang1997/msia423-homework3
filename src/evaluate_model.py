@@ -14,8 +14,8 @@ def evaluation(y_test: pd.DataFrame, pred_df: pd.DataFrame, output_path: str) ->
     :param output_path: filepath of output file
     :return: None
     """
-    ypred_proba_test = pred_df['ypred_proba']
-    ypred_bin_test = pred_df['ypred_bin']
+    ypred_proba_test = pred_df['ypred_proba'].values
+    ypred_bin_test = pred_df['ypred_bin'].values
 
     auc = roc_auc_score(y_test, ypred_proba_test)
     confusion = confusion_matrix(y_test, ypred_bin_test)
