@@ -9,7 +9,7 @@ from src.feature_generation import feature_gen, add_log_entropy, \
 
 logger1.setLevel('ERROR')
 
-with open("config.yaml", "r") as f:
+with open("config/config.yaml", "r") as f:
     config = yaml.safe_load(f)
     feature_config = config['generate_features']
     data_config = config['load_data']

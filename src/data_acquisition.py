@@ -43,7 +43,7 @@ def load_data(input_path: str, output_path: str, columns: list) -> pd.DataFrame:
     """Load cloud data from local path and write a concatenated csv.
 
     :param input_path: str - local data input file path
-    :param output_path: str - local data output file path
+    :param output_path: str - local testing data output file path
     :param columns: list - columns to load
     :return: :obj: pandas dataframe - data as csv
     """
@@ -68,6 +68,5 @@ def load_data(input_path: str, output_path: str, columns: list) -> pd.DataFrame:
     data = pd.concat([first_cloud, second_cloud])
 
     data.to_csv(output_path, index=False)
-    logger0.info(f'data successfully written to {output_path}.')
 
     return data

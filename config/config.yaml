@@ -1,11 +1,8 @@
-pipeline:
+model:
   name: clouds
   author: Qiana Yang
   version: AA1
-  description: ## ADD
-  tags:
-    - classifier
-    - housing
+  description: a random forest modeling pipeline that classifies clouds.
   dependencies: requirements.txt
 save_data:
   html: https://archive.ics.uci.edu/ml/machine-learning-databases/undocumented/taylor/cloud.data
@@ -34,18 +31,11 @@ generate_features:
     output_path: tests/data/features_ir_norm_range.csv
 train_model:
   train_test_split:
-    train_feature_path: tests/data/train_features.csv
-    train_target_path: tests/data/train_labels.csv
-    test_feature_path: tests/data/test_features.csv
-    test_target_path: tests/data/test_labels.csv
     seed: 42
     test_size: 0.4
   fit_model:
     features_list: ['log_entropy', 'IR_norm_range', 'entropy_x_contrast']
-    output_path: tests/result/predictions.csv
   model_params:
     n_estimators: 10
     max_depth: 10
     random_state: 42
-evaluate_model:
-  output_path: tests/result/result.txt
