@@ -6,12 +6,9 @@ model:
   dependencies: requirements.txt
 save_data:
   html: https://archive.ics.uci.edu/ml/machine-learning-databases/undocumented/taylor/cloud.data
-  local_path: data/raw_cloud.data
   attempt: 4
   wait: 3
 load_data:
-  input_path: data/raw_cloud.data
-  output_path: tests/data/cloud.csv
   columns:
     ['visible_mean', 'visible_max', 'visible_min',
     'visible_mean_distribution', 'visible_contrast',
@@ -19,16 +16,16 @@ load_data:
     'IR_mean', 'IR_max', 'IR_min']
 generate_features:
   feature_gen:
-    features_output_path: tests/data/raw_features.csv
-    labels_output_path: tests/data/raw_labels.csv
+    features_output_path: data/raw_features.csv
+    labels_output_path: data/raw_labels.csv
   add_log_entropy:
-    output_path: tests/data/features_log_entropy.csv
+    output_path: data/features_log_entropy.csv
   add_entropy_x_contrast:
-    output_path: tests/data/features_entropy_x_contrast.csv
+    output_path: data/features_entropy_x_contrast.csv
   add_ir_range:
-    output_path: tests/data/features_ir_range.csv
+    output_path: data/features_ir_range.csv
   add_ir_norm_range:
-    output_path: tests/data/features_ir_norm_range.csv
+    output_path: data/features_ir_norm_range.csv
 train_model:
   train_test_split:
     seed: 42

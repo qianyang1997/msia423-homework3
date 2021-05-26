@@ -28,20 +28,22 @@ if __name__ == '__main__':
     with open(args.config, "r") as f:
         config = yaml.safe_load(f)
 
-    if args.input is not None:
-        data = pd.read_csv(args.input)
-
     # save data (to raw text file)
     if args.step == 'acquire':
-        save_data(**config["save_data"])
+        output = save_data(**config["save_data"])
+
     # read data
     elif args.step == 'read':
-        output = load_data(**config["load_data"])
+        with open(args.input, 'r') as f:
+            data = [[s for s in line.split(' ') if s != ''] for line in f.readlines()]
+        output = load_data(data, **config["load_data"])
+
     # feature generation
     elif args.step == 'featurize':
+        data = pd.read_csv(args.input)
         feature_config = config["generate_features"]
 
-        # input and output files are specified in config.yaml for granular functions for testing purpose
+        # users have the option to specify output paths and download granular feature files
         features, labels = feature_gen(data)
         if "features_output_path" in feature_config["feature_gen"] and \
            "labels_output_path" in feature_config["feature_gen"]:
@@ -68,6 +70,7 @@ if __name__ == '__main__':
 
     # model training
     elif args.step == 'train':
+        data = pd.read_csv(args.input)
         model_config = config["train_model"]
         features, labels = feature_gen(data)
         X_train, X_test, y_train, y_test = train_test_split(features, labels,
@@ -78,10 +81,18 @@ if __name__ == '__main__':
 
     # model evaluation
     elif args.step == 'evaluate':
+        data = pd.read_csv(args.input)
         pred, y_test = feature_gen(data)
         evaluation(y_test, pred)
         output = None
 
     if args.output is not None:
-        output.to_csv(args.output, index=False)
-        logger.info(f'Output saved to {args.output}.')
+        if type(output) == str and output != '':
+            with open(args.output, 'w') as text:
+                text.write(output)
+                logger.info(f'Output saved to {args.output}.')
+        elif type(output) == pd.DataFrame:
+            output.to_csv(args.output, index=False)
+            logger.info(f'Output saved to {args.output}.')
+        else:
+            logger.error(f'Error: Output in questionable format.')

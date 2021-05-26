@@ -1,4 +1,3 @@
-import yaml
 import time
 import requests
 
@@ -10,14 +9,13 @@ import logging
 logger0 = logging.getLogger(__name__)
 
 
-def save_data(html: str, local_path: str, attempt: int, wait: int) -> None:
+def save_data(html: str, attempt: int, wait: int) -> str:
     """Make html request to download cloud data.
 
     :param html: str - url to make html requests
-    :param local_path: str - local path to save raw data file
     :param attempt: int - number of request attempts if connection error arises
     :param wait: int - number of seconds to wait before the next request attempt
-    :return: None
+    :return: str - downloaded text file
     """
     for i in range(attempt):
         try:
@@ -29,27 +27,24 @@ def save_data(html: str, local_path: str, attempt: int, wait: int) -> None:
                 time.sleep(wait)
             else:
                 logger0.error("Max attempt reached. There was a connection error when attempting to call %s.", html)
+                response = ''
         except requests.exceptions.HTTPError:
             logger0.error("Invalid HTTP response. Check your url.")
+            response = ''
             break
         else:
-            with open(local_path, 'w') as text:
-                text.write(response)
-            logger0.info(f"Data file downloaded to {local_path}.")
             break
 
+    return response
 
-def load_data(input_path: str, output_path: str, columns: list) -> pd.DataFrame:
+
+def load_data(data: list, columns: list) -> pd.DataFrame:
     """Load cloud data from local path and write a concatenated csv.
 
-    :param input_path: str - local data input file path
-    :param output_path: str - local testing data output file path
+    :param data: list - list of lists of lines of text in raw data text
     :param columns: list - columns to load
     :return: :obj: pandas dataframe - data as csv
     """
-    with open(input_path, 'r') as f:
-        data = [[s for s in line.split(' ') if s != ''] for line in f.readlines()]
-
     # extract data for first cloud
     first_cloud = data[53:1077]
     first_cloud = [[float(s.replace('/n', '')) for s in cloud]
@@ -66,7 +61,5 @@ def load_data(input_path: str, output_path: str, columns: list) -> pd.DataFrame:
 
     # concatenate dataframes for training
     data = pd.concat([first_cloud, second_cloud])
-
-    data.to_csv(output_path, index=False)
 
     return data
