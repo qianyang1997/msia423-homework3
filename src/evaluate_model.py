@@ -3,8 +3,6 @@ import pandas as pd
 
 import logging
 
-logger3 = logging.getLogger(__name__)
-
 
 def evaluation(y_test: pd.DataFrame, pred_df: pd.DataFrame) -> None:
     """evaluate model performance on test set.

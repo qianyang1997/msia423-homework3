@@ -1,10 +1,6 @@
 import pandas as pd
 import numpy as np
 
-import logging
-
-logger1 = logging.getLogger(__name__)
-
 
 def feature_gen(data: pd.DataFrame) -> tuple:
     """generate features and labels and write to local csv.
@@ -12,11 +8,8 @@ def feature_gen(data: pd.DataFrame) -> tuple:
     :param data: :obj: pandas dataframe - data to be fed
     :returns tuple - tuple of pandas dataframe consisting of features and labels
     """
-    try:
-        features = data.drop('class', axis=1)
-        target = data['class']
-    except KeyError:
-        logger1.error('Error occured. Make sure "class" is a column in the dataframe.')
+    features = data.drop('class', axis=1)
+    target = data['class']
 
     return features, target
 
